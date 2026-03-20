@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunKada — Find Your Run Crew in Metro Manila</title>
+<meta name="description" content="Discover run clubs, join group runs, and never run alone in Metro Manila. Join the waitlist for early access.">
+<meta property="og:title" content="RunKada — Find Your Run Crew in Metro Manila">
+<meta property="og:description" content="Discover run clubs, join group runs, and never run alone. Join the waitlist.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #FF5C35;
+    --orange-glow: #FF7A57;
+    --dark: #0D0D0D;
+    --dark-card: #161616;
+    --dark-surface: #1C1C1C;
+    --gray-text: #9A9A9A;
+    --light: #F5F0EB;
+    --lime: #C8FF2E;
+    --lime-dim: #A8D926;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--light);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── GRADIENT BLOBS ── */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    will-change: transform;
+  }
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,92,53,0.2), transparent 70%);
+    top: -100px; right: -150px;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(200,255,46,0.1), transparent 70%);
+    bottom: 200px; left: -100px;
+    animation: drift 22s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, -30px) scale(1.1); }
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--light);
+    text-decoration: none;
+  }
+  .logo span { color: var(--orange); }
+  .nav-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gray-text);
+    background: var(--dark-surface);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid #2a2a2a;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 80px 0 60px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lime);
+    background: rgba(200,255,46,0.08);
+    border: 1px solid rgba(200,255,46,0.2);
+    padding: 8px 18px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease-out both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 12vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -1px;
+    color: var(--light);
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease-out 0.1s both;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--orange);
+    position: relative;
+  }
+  h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--orange);
+    opacity: 0.3;
+    border-radius: 3px;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--gray-text);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    animation: fadeUp 0.8s ease-out 0.2s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FORM ── */
+  .form-container {
+    animation: fadeUp 0.8s ease-out 0.3s both;
+  }
+  .signup-form {
+    display: flex;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .signup-form input[type="email"] {
+    flex: 1;
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--light);
+    background: var(--dark-surface);
+    border: 2px solid #2a2a2a;
+    border-radius: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .signup-form input[type="email"]::placeholder {
+    color: #555;
+  }
+  .signup-form input[type="email"]:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 4px rgba(255,92,53,0.15);
+  }
+  .signup-form button {
+    padding: 16px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    background: var(--orange);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .signup-form button:hover {
+    background: var(--orange-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255,92,53,0.35);
+  }
+  .signup-form button:active {
+    transform: translateY(0);
+  }
+
+  .form-note {
+    font-size: 13px;
+    color: #555;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-message {
+    display: none;
+    text-align: center;
+    padding: 32px;
+    background: rgba(200,255,46,0.05);
+    border: 1px solid rgba(200,255,46,0.2);
+    border-radius: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .success-message.show { display: block; animation: fadeUp 0.5s ease-out; }
+  .success-message h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--lime);
+    margin-bottom: 8px;
+  }
+  .success-message p { color: var(--gray-text); font-size: 15px; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 48px 0;
+    margin-top: 48px;
+    border-top: 1px solid #1e1e1e;
+    animation: fadeUp 0.8s ease-out 0.4s both;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--orange);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--gray-text);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+  }
+
+  /* ── FEATURES ── */
+  .features {
+    padding: 60px 0 80px;
+  }
+  .features-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--orange);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .features-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 52px);
+    text-align: center;
+    margin-bottom: 56px;
+    color: var(--light);
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--dark-card);
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 36px 28px;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--lime));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: #333;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .feature-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    color: var(--light);
+  }
+  .feature-card p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--gray-text);
+  }
+
+  /* ── CTA BOTTOM ── */
+  .cta-bottom {
+    text-align: center;
+    padding: 80px 0;
+    border-top: 1px solid #1e1e1e;
+    position: relative;
+  }
+  .cta-bottom h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 8vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+  .cta-bottom h2 em {
+    font-style: normal;
+    color: var(--lime);
+  }
+  .cta-bottom p {
+    color: var(--gray-text);
+    font-size: 17px;
+    margin-bottom: 36px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid #1a1a1a;
+    color: #444;
+    font-size: 13px;
+  }
+  footer a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer a:hover { color: var(--orange); }
+  footer .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .hero { padding: 48px 0 40px; }
+    .signup-form {
+      flex-direction: column;
+    }
+    .signup-form button {
+      padding: 18px 32px;
+    }
+    .stats-bar {
+      gap: 24px;
+    }
+    .stat-number { font-size: 28px; }
+    .nav-tag { display: none; }
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="wrapper">
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">RUN<span>KADA</span></a>
+    <span class="nav-tag">Coming Soon</span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Launching in Metro Manila</div>
+    <h1>NEVER RUN<br><em>ALONE</em> AGAIN</h1>
+    <p class="hero-sub">Discover run clubs, RSVP to group runs, and find your crew across Metro Manila — all in one app.</p>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MAILCHIMP FORM — REPLACE THE ACTION URL BELOW
+         
+         1. Go to Mailchimp → Audience → Signup forms → Embedded forms
+         2. Copy the "action" URL from the generated HTML
+         3. Replace the placeholder URL below with YOUR action URL
+         
+         It looks like: https://xxxxx.us21.list-manage.com/subscribe/post?u=XXXXX&id=YYYYY
+    ═══════════════════════════════════════════════════════ -->
+    <div class="form-container" id="formContainer">
+      <form 
+        class="signup-form"
+        action="YOUR_MAILCHIMP_FORM_ACTION_URL_HERE"
+        method="post"
+        id="mc-embedded-subscribe-form"
+        name="mc-embedded-subscribe-form"
+        target="_blank"
+        novalidate
+      >
+        <!-- Mailchimp anti-bot field — do NOT remove -->
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="text" name="b_REPLACE_WITH_YOUR_U_VALUE_REPLACE_WITH_YOUR_ID_VALUE" tabindex="-1" value="">
+        </div>
+
+        <input 
+          type="email" 
+          name="EMAIL" 
+          placeholder="Enter your email" 
+          required
+          autocomplete="email"
+        >
+        <button type="submit" name="subscribe">Join Waitlist</button>
+      </form>
+      <p class="form-note">Free forever. No spam — just your invite when we launch.</p>
+    </div>
+
+    <div class="success-message" id="successMessage">
+      <h3>YOU'RE IN!</h3>
+      <p>We'll hit you up when RunKada drops. Get ready to find your crew.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Run Clubs in MM</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">100K+</div>
+        <div class="stat-label">Runners in PH</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">1</div>
+        <div class="stat-label">App to Unite Them</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="features-label">What's Coming</p>
+    <h2 class="features-heading">Built for Manila Runners</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🏃</span>
+        <h3>Run Club Discovery</h3>
+        <p>Find running groups near you — from BGC to UP Diliman. Filter by distance, pace, and vibe.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📅</span>
+        <h3>Event Calendar</h3>
+        <p>Every fun run, race, and group session in Metro Manila. RSVP in one tap, never miss a run.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📋</span>
+        <h3>Training Plans</h3>
+        <p>Beginner to half-marathon plans tailored for PH weather and routes. Guided, not overwhelming.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">👥</span>
+        <h3>Find Your Crew</h3>
+        <p>Match with runners at your pace and schedule. Solo running days are over.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="cta-bottom">
+    <h2>READY TO<br><em>RUN TOGETHER?</em></h2>
+    <p>Join the waitlist and be the first to find your crew when we launch.</p>
+    <a href="#" onclick="document.querySelector('input[name=EMAIL]').focus(); return false;">
+      <button class="signup-form" style="padding:18px 40px; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; color:var(--dark); background:var(--orange); border:none; border-radius:14px; cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;"
+        onmouseover="this.style.background='var(--orange-glow)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 30px rgba(255,92,53,0.35)'"
+        onmouseout="this.style.background='var(--orange)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+      >
+        Get Early Access ↑
+      </button>
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">RUNKADA</div>
+    <p>A <a href="https://jgstudiosph.com" target="_blank">JGStudios</a> product &nbsp;·&nbsp; Metro Manila, PH</p>
+  </footer>
+</div>
+
+</body>
+</html>
